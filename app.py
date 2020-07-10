@@ -10,18 +10,27 @@ import flask
 app = Flask(__name__)
 
 
+# 删除本地图像
+def delete_local_image(filepath):
+    del_list = os.listdir(filepath)
+    for file in del_list:
+        file_path = os.path.join(filepath, file)
+        if os.path.isfile(file_path):
+            os.remove(file_path)
+
+
 # 返回base64编码
 def return_base64(format):
     if format == "jpg":
         head = 'data:image/jpeg;base64,'
     elif format == "png":
         head = 'data:image/png;base64,'
-    with open('./embed/original.jpg', 'rb') as file:
+    with open('./embed/original.' + format, 'rb') as file:
         # 图像的base64编码
         base64_data = base64.b64encode(file.read())
         # 获取编码
         base64_data1 = head + base64_data.decode()
-    with open('./embed/embed.jpg', 'rb') as file:
+    with open('./embed/embed.' + format, 'rb') as file:
         # 图像的base64编码
         base64_data = base64.b64encode(file.read())
         # 获取编码
@@ -67,7 +76,7 @@ def embed():
     image_process = Embed(text, format, int(length))
     msg_out1, msg_out2 = image_process.process(image_path)
     # 获取base64编码
-    image_base64_1, image_base64_2 = return_base64()
+    image_base64_1, image_base64_2 = return_base64(format)
     # json结果
     result = {}
     # 判断格式
@@ -87,6 +96,8 @@ def embed():
     json_data = jsonify(result)
     res = make_response(json_data)
     res.headers['Access-Control-Allow-Origin'] = '*'
+    # 删除本地图片
+    delete_local_image('./embed')
     # 返回json数据
     return res
 
