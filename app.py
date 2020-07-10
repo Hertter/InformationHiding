@@ -11,8 +11,11 @@ app = Flask(__name__)
 
 
 # 返回base64编码
-def return_base64():
-    head = 'data:image/jpeg;base64,'
+def return_base64(format):
+    if format == "jpg":
+        head = 'data:image/jpeg;base64,'
+    elif format == "png":
+        head = 'data:image/png;base64,'
     with open('./embed/original.jpg', 'rb') as file:
         # 图像的base64编码
         base64_data = base64.b64encode(file.read())
