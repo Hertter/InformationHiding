@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN" style="height: 100%;">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>信息安全技术</title>
+  <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+  <link rel="stylesheet" href="./Resources/bootstrap.min.css">
+  <link rel="stylesheet" href="./css/index.css">
+  <link rel="stylesheet" href="./Resources/toast.style.css">
+  </link>
+</head>
+
+<body style="background-image: url(./Resources/index.jpg);background-size:100% 100%;">
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav"
+          aria-expanded="false">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="JavaScript:void(0)">
+          <b>数字水印</b>
+        </a>
+      </div>
+
+      <div class="collapse navbar-collapse" id="nav">
+        <ul class="nav navbar-nav">
+          <li class="active">
+            <a href="index.html">基于LSB嵌入的图片隐藏</a>
+          </li>
+          <li>
+            <a href="tow.html">PSNR & SSIM</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container marketing">
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+
+      <div class="col-md-6">
+        <span class="btn btn-lg btn-success fileinput-button">
+          <span>选择图片</span>
+          <input type="file" id="change1">
+        </span>
+        <div class="center-block lineheight">
+          <img class="featurette-image img-responsive" id="chooes_img1">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="center-block marginb">
+          <form class="form-horizontal" id="form1">
+            <div class="form-group">
+              <label for="embedText" class="col-sm-3 control-label">嵌入信息</label>
+              <div class="col-sm-12">
+                <textarea type="text" required name="embedText" class="form-control" id="embedText"
+                  placeholder="需要嵌入的信息"></textarea>
+              </div>
+            </div>
+            <div class="form-group">
+              <p class="sele-text both">嵌入份数：</p>
+              <input type="number" required class="form-control copies" value="1" name="copies"/>
+            </div>
+            <div class="form-group">
+              <p class="sele-text both">输出格式：</p>
+              <div class="radio both">
+                <label><input type="radio" name="optradio" value="png" checked>PNG</label>
+              </div>
+              <div class="radio both">
+                <label><input type="radio" name="optradio" value="jpg">JPG</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <p class="sele-text both">选择算法：</p>
+              <div class="radio both">
+                <label><input type="radio" name="algorithm" value="lsb" checked>LSB</label>
+              </div>
+              <div class="radio both">
+                <label><input type="radio" name="algorithm" value="dtc">DTC</label>
+              </div>
+              <div class="radio both">
+                <label><input type="radio" name="algorithm" value="dwt">DWT</label>
+              </div>
+            </div>
+          </form>
+          <div class="jumbotron">
+            <button class="btn btn-primary btn-lg myModal" id="submit" type="submit">嵌入</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="featurette-divider">
+  </div>
+  <!-- 模态框（Modal） -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+            &times;
+          </button>
+          <h4 class="modal-title" id="myModalLabel">
+            对比图
+          </h4>
+        </div>
+        <div class="modal-body">
+          <div class="row featurette">
+
+            <div class="col-md-4">
+              <h3>Grayscale Image</h3>
+              <div class="center-block lineheight">
+                <img class="featurette-image img-responsive" src="" id="Gimg">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <h3>Original Image</h3>
+              <div class="center-block lineheight">
+                <img class="featurette-image img-responsive" src="" id="Oimg">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <h3>Embed Image</h3>
+              <div class=" center-block lineheight">
+                <img class="featurette-image img-responsive" src="" id="'Eimg">
+              </div>
+            </div>
+          </div>
+          <div class="row featurette"></div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>从图像中提取的信息</th>
+                <th class="respinfo"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row"></th>
+                <td>original img</td>
+                <td>embed img</td>
+              </tr>
+              <tr>
+                <th scope="row">PSNR</th>
+                <td class="o_psnr">o_psnr</td>
+                <td class="e_psnr">e_psnr</td>
+              </tr>
+              <tr>
+                <th scope="row">SSIM</th>
+                <td class="o_psnr">o_psnr</td>
+                <td class="e_ssim">e_ssim</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" id="getinfo">输出信息</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModal">关闭
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--jquery-->
+  <script src="./Resources/jquery.min.js"></script>
+  <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+  <script src="./Resources/bootstrap.min.js"></script>
+  <script src="./Resources/toast.script.js"></script>
+  <script src="./js/index.js"></script>
+</body>
+
+</html>

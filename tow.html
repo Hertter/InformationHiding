@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN" style="height: 100%;">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>信息安全技术</title>
+  <!--jquery-->
+  <script src="./Resources/jquery.min.js"></script>
+  <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+  <link rel="stylesheet" href="./Resources/bootstrap.min.css">
+  <link rel="stylesheet" href="./css/tow.css">
+  <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+  <script src="./Resources/bootstrap.min.js"></script>
+  
+</head>
+
+<body style="background-image: url(./Resources/index.jpg);background-size:100% 100%;">
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav"
+          aria-expanded="false">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="JavaScript:void(0)">
+          <b>数字水印</b>
+        </a>
+      </div>
+
+      <div class="collapse navbar-collapse" id="nav">
+        <ul class="nav navbar-nav">
+          <li>
+            <a href="index.html">基于LSB嵌入的图片隐藏</a>
+          </li>
+          <li class="active">
+            <a href="tow.html">PSNR & SSIM</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container marketing">
+    <h4>在不同嵌入信息长度时，计算所形成的mark图像的PSNR和SSIM。</h4>
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+
+      <div class="col-md-6">
+        <span class="btn btn-lg btn-success fileinput-button">
+          <span>选择图片</span>
+          <input type="file" id="change1">
+        </span>
+        <div class="center-block">
+          <img class="featurette-image img-responsive" id="chooes_img1">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <span class="btn btn-lg btn-primary fileinput-button">
+          <span>选择logo</span>
+          <input type="file" id="change2">
+        </span>
+        <div class=" center-block">
+          <img class="featurette-image img-responsive" id="chooes_img2">
+        </div>
+      </div>
+    </div>
+
+    <hr class="featurette-divider">
+    <div class="row featurette">
+      <div class="col-md-6">
+        <p>原图</p>
+        <form class="form-horizontal" id="form1">
+          <div class="form-group">
+            <label for="number1" class="col-sm-2 control-label">大小</label>
+            <div class="col-sm-3">
+              <input type="number" name="number1" class="form-control" id="number1" placeholder="number">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="number2" class="col-sm-2 control-label">大小</label>
+            <div class="col-sm-3">
+              <input type="number" name="number2" class="form-control" id="number2" placeholder="number">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="col-md-6">
+        <p>logo</p>
+        <form class="form-horizontal" id="form2">
+          <div class="form-group">
+            <label for="number1" class="col-sm-2 control-label">大小</label>
+            <div class="col-sm-3">
+              <input type="number" class="form-control" id="number1" placeholder="number">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="number2" class="col-sm-2 control-label">大小</label>
+            <div class="col-sm-3">
+              <input type="number" class="form-control" id="number2" placeholder="number">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="number2" class="col-sm-2 control-label">大小</label>
+            <div class="col-sm-3">
+              <input type="number" class="form-control" id="number2" placeholder="number">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="number2" class="col-sm-2 control-label">大小</label>
+            <div class="col-sm-3">
+              <input type="number" class="form-control" id="number2" placeholder="number">
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="jumbotron">
+      <button class="btn btn-primary btn-lg myModal" data-toggle="modal" data-target="#myModal">合成</button>
+    </div>
+  </div>
+  <!-- 模态框（Modal） -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+            &times;
+          </button>
+          <h4 class="modal-title" id="myModalLabel">
+            合成图
+          </h4>
+        </div>
+        <div class="modal-body">
+          <div class="row featurette">
+
+            <div class="col-md-6">
+              <div class="center-block">
+                <img class="featurette-image img-responsive" id="chooes_img1">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class=" center-block">
+                <img class="featurette-image img-responsive" id="chooes_img2">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="./js/index.js"></script>
+</body>
+
+</html>
