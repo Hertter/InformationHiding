@@ -6,7 +6,7 @@ import flask
 
 from flask import request
 
-from ImageProcess.Embed import Embed
+from python.Embed import Embed
 
 server = flask.Flask(__name__)  # __name__代表当前的python文件。把当前的python文件当做一个服务启动
 
