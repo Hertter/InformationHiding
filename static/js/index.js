@@ -34,6 +34,8 @@ $(function () {
     })
 
     $("#submit").click(function () {
+        
+        //这里验证表单是否可以提交  如果返回false阻止提交
         if ($('#embedText').val().trim() == '') {
             $.Toast("嵌入的信息为空", "必须填入嵌入的信息", "error", {
                 stack: true,
@@ -62,54 +64,18 @@ $(function () {
             });
             return;
         }
+        $('#form1').ajaxForm(function(data){
+            console.log(data);
+            $("#myModal").modal("show");
+            setTimeout(function(){
+                Oimg.src = data.image_base64_1;
+                Eimg.src = data.image_base64_2;
+            })
+        })
         var toName = $("input[name='algorithm']:checked").val();
 
-        console.log($("#form1").serialize());
-        // $('original').text($("#form1").serialize());
         // 发送请求获取嵌入后的图像和嵌入后读取的信息
-        console.log($('#embedText').val(), $('.copies').val(), $('[name=format]').val());
-        // $.post("", {
-        //
-        //     },
-        //     function (result) {
-        //    console.log(result);
-        // });
 
-        $.ajax({
-            type: "POST",
-            url: 'http://127.0.0.1:5000/lsb/embed',
-            data: JSON.stringify({
-                text: $('#embedText').val(),
-                length: Number($('.copies').val()),
-                format: $('[name=format]').val(),
-                image: imgBase64
-            }),
-            contentType: "multipart/form-data",
-            processData: false,
-            success: function (data) {
-                console.log(data);
-            },
-            error: function (data) {
-                console.log(data);
-            }
-        });
-
-
-        // 请求接口
-        // var toUrl = '';
-        // switch(toName){
-        //     case 'lsb':
-
-        //         toUrl = 'lsb';
-        //         break;
-        //     case 'dtc':
-        //         toUrl = 'dtc';
-        //         break;
-        //     case 'dwt':
-        //         toUrl = 'dwt';
-        //         break;
-        // }
-        $("#myModal").modal("show")
     })
 
 
