@@ -1,14 +1,13 @@
-import base64
-import json
-import os
+from flask import Flask
+from flask import render_template
+from flask import request, jsonify, make_response
+from Embed import Embed
 
+import base64
+import os
 import flask
 
-from flask import request
-
-from python.Embed import Embed
-
-server = flask.Flask(__name__)  # __name__代表当前的python文件。把当前的python文件当做一个服务启动
+app = Flask(__name__)
 
 
 # 返回base64编码
@@ -42,8 +41,9 @@ def save_image(image):
         return file_paths
 
 
-@server.route('/lsb/embed', methods=['post'])
+@app.route('/lsb/embed', methods=['post'])
 def embed():
+    print(flask.request.values)
     # 文字
     text = flask.request.values.get('text')
     # 图像
@@ -80,12 +80,18 @@ def embed():
             'image_base64_1': image_base64_1,
             'image_base64_2': image_base64_2
         }
+    # 处理跨域问题
+    json_data = jsonify(result)
+    res = make_response(json_data)
+    res.headers['Access-Control-Allow-Origin'] = '*'
     # 返回json数据
-    return json.dumps(result, ensure_ascii=False)
+    return res
+
+
+@app.route('/')
+def hello_world():
+    return render_template('index.html')
 
 
 if __name__ == '__main__':
-    # port可以指定端口，默认端口是5000
-    # host默认是服务器，默认是127.0.0.1
-    # debug=True 修改时不关闭服务
-    server.run(debug=True, port=80)
+    app.run()

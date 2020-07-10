@@ -7,9 +7,9 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>信息安全技术</title>
   <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
-  <link rel="stylesheet" href="./Resources/bootstrap.min.css">
-  <link rel="stylesheet" href="./css/index.css">
-  <link rel="stylesheet" href="./Resources/toast.style.css">
+  <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../static/css/index.css">
+  <link rel="stylesheet" href="../static/css/toast.style.css">
   </link>
 </head>
 
@@ -61,21 +61,21 @@
             <div class="form-group">
               <label for="embedText" class="col-sm-3 control-label">嵌入信息</label>
               <div class="col-sm-12">
-                <textarea type="text" required name="embedText" class="form-control" id="embedText"
+                <textarea type="text" required name="text" class="form-control" id="embedText"
                   placeholder="需要嵌入的信息"></textarea>
               </div>
             </div>
             <div class="form-group">
               <p class="sele-text both">嵌入份数：</p>
-              <input type="number" required class="form-control copies" value="1" name="copies"/>
+              <input type="number" required class="form-control copies" value="1" name="length"/>
             </div>
             <div class="form-group">
               <p class="sele-text both">输出格式：</p>
               <div class="radio both">
-                <label><input type="radio" name="optradio" value="png" checked>PNG</label>
+                <label><input type="radio" name="format" value="png" checked>PNG</label>
               </div>
               <div class="radio both">
-                <label><input type="radio" name="optradio" value="jpg">JPG</label>
+                <label><input type="radio" name="format" value="jpg">JPG</label>
               </div>
             </div>
             <div class="form-group">
@@ -170,11 +170,11 @@
     </div>
   </div>
   <!--jquery-->
-  <script src="./Resources/jquery.min.js"></script>
+  <script src="../static/js/jquery.min.js"></script>
   <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-  <script src="./Resources/bootstrap.min.js"></script>
-  <script src="./Resources/toast.script.js"></script>
-  <script src="./js/index.js"></script>
+  <script src="../static/js/bootstrap.min.js"></script>
+  <script src="../static/js/toast.script.js"></script>
+  <script src="../static/js/index.js"></script>
 </body>
 
 </html>
