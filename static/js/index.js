@@ -32,8 +32,11 @@ $(function () {
         // $('.infotext').text('从图像中提取的信息为：' + 'ds');
         $('.table').show();
     })
-
     $("#submit").click(function () {
+        var toName = $("input[name='algorithm']:checked").val();
+        var toUrl = 'http://127.0.0.1:5000/'+ toName + '/embed';
+        $('#form1').attr('action', toUrl);
+        $('.warning').hide();
         // $('#submit').attr('disabled',"true");
         // setTimeout(function(){
         //     $('#submit').removeAttr("disabled");
@@ -67,6 +70,9 @@ $(function () {
             });
             return;
         }
+        console.log($('input[name="format"]:checked').val());
+        console.log($('input[name="algorithm"]:checked').val());
+        if($('input[name="format"]:checked').val() == 'jpg' && $('input[name="algorithm"]:checked').val() == 'lsb') $('.warning').show();
         $('#form1').ajaxForm(function(data){
             console.log(data);
             $('.respinfo').text(data.msg_out)
@@ -74,9 +80,10 @@ $(function () {
             setTimeout(function(){
                 Gimg.src = data.image_base64_1;
                 Eimg.src = data.image_base64_2;
+                $('.psnr').text(data.psnr);
+                $('.ssim').text(data.ssim);
             })
         })
-        var toName = $("input[name='algorithm']:checked").val();
 
         // 发送请求获取嵌入后的图像和嵌入后读取的信息
 

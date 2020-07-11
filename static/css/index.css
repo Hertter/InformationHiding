@@ -103,3 +103,8 @@ body{
     word-wrap: break-word;
     text-align: left;
 }
+
+.warning{
+    font-size: 10px;
+    color: red;
+}

@@ -31,7 +31,7 @@
       <div class="collapse navbar-collapse" id="nav">
         <ul class="nav navbar-nav">
           <li class="active">
-            <a href="index.html">基于LSB嵌入的图片隐藏</a>
+            <a href="index.html">空域鲁棒性数字水印应用</a>
           </li>
           <li>
             <a href="tow.html">PSNR & SSIM</a>
@@ -44,7 +44,7 @@
   <div class="container marketing">
 
     <form class="form-horizontal" id="form1" enctype="multipart/form-data" method="POST"
-      action="http://127.0.0.1:5000/lsb/embed">
+      action="">
       <hr class="featurette-divider">
 
       <div class="row featurette">
@@ -144,25 +144,18 @@
             </thead>
             <tbody>
               <tr>
-                <th>从图像中提取的信息</th>
+                <th>从图像中提取的信息<span class="warning"><br/>*LSB算法提取jpg图像嵌入信息显示乱码</span></th>
                 <td>
                   <div class="respinfo"></div>
                 </td>
               </tr>
               <tr>
-                <th scope="row"></th>
-                <td>original img</td>
-                <td>embed img</td>
-              </tr>
-              <tr>
                 <th scope="row">PSNR</th>
-                <td class="o_psnr">o_psnr</td>
-                <td class="e_psnr">e_psnr</td>
+                <td class="psnr"></td>
               </tr>
               <tr>
                 <th scope="row">SSIM</th>
-                <td class="o_psnr">o_psnr</td>
-                <td class="e_ssim">e_ssim</td>
+                <td class="ssim"></td>
               </tr>
             </tbody>
           </table>
