@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import render_template
 from flask import request, jsonify, make_response
-from Embed import Embed
+from LSB import LSB
 from skimage.metrics import peak_signal_noise_ratio
 from skimage.metrics import structural_similarity
 
@@ -92,7 +92,7 @@ def embed():
     # 保存图片
     image_path = save_image(image)
     # 图片处理
-    image_process = Embed(text, format, int(length))
+    image_process = LSB(text, format, int(length))
     msg_out1, msg_out2 = image_process.process(image_path)
     # 获取base64编码
     image_base64_1, image_base64_2 = return_base64(format)
