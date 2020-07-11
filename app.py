@@ -1,6 +1,8 @@
 from flask import Flask
 from flask import render_template
 from flask import request, jsonify, make_response
+
+from DCT import DCT
 from LSB import LSB
 from skimage.metrics import peak_signal_noise_ratio
 from skimage.metrics import structural_similarity
@@ -73,7 +75,7 @@ def save_image(image):
 
 
 @app.route('/lsb/embed', methods=['post'])
-def embed():
+def lsb():
     print(flask.request.values)
     # 文字
     text = flask.request.values.get('text')
@@ -93,6 +95,61 @@ def embed():
     image_path = save_image(image)
     # 图片处理
     image_process = LSB(text, format, int(length))
+    msg_out1, msg_out2 = image_process.process(image_path)
+    # 获取base64编码
+    image_base64_1, image_base64_2 = return_base64(format)
+    # 获取图像质量
+    psnr, ssim = get_image_quality(format, image.filename)
+    # json结果
+    result = {}
+    # 判断格式
+    if format == 'jpg':
+        result = {
+            'msg_out': msg_out1,
+            'image_base64_1': image_base64_1,
+            'image_base64_2': image_base64_2,
+            'psnr': psnr,
+            'ssim': ssim
+        }
+    elif format == 'png':
+        result = {
+            'msg_out': msg_out2,
+            'image_base64_1': image_base64_1,
+            'image_base64_2': image_base64_2,
+            'psnr': psnr,
+            'ssim': ssim
+        }
+    # 处理跨域问题
+    json_data = jsonify(result)
+    res = make_response(json_data)
+    res.headers['Access-Control-Allow-Origin'] = '*'
+    # 删除本地图片
+    delete_local_image('./embed')
+    # 返回json数据
+    return res
+
+
+@app.route('/dct/embed', methods=['post'])
+def dct():
+    print(flask.request.values)
+    # 文字
+    text = flask.request.values.get('text')
+    # 图像
+    image = request.files['image']
+    # 长度
+    length = flask.request.values.get('length')
+    # 格式
+    format = flask.request.values.get('format')
+
+    print('text:', text)
+    print('image:', image)
+    print('length:', length)
+    print('format:', format)
+
+    # 保存图片
+    image_path = save_image(image)
+    # 图片处理
+    image_process = DCT(text, format, int(length))
     msg_out1, msg_out2 = image_process.process(image_path)
     # 获取base64编码
     image_base64_1, image_base64_2 = return_base64(format)
