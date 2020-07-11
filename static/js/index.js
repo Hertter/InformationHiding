@@ -34,7 +34,10 @@ $(function () {
     })
 
     $("#submit").click(function () {
-        $('#submit').attr('disabled',"true");
+        // $('#submit').attr('disabled',"true");
+        // setTimeout(function(){
+        //     $('#submit').removeAttr("disabled");
+        // },500)
         //这里验证表单是否可以提交  如果返回false阻止提交
         if ($('#embedText').val().trim() == '') {
             $.Toast("嵌入的信息为空", "必须填入嵌入的信息", "error", {
@@ -82,10 +85,10 @@ $(function () {
 
     $('.close').click(function () {
         $('.table').hide();
-        $('#submit').removeAttr("disabled");
+        // $('#submit').removeAttr("disabled");
     })
     $('#closeModal').click(function () {
         $('.table').hide();
-        $('#submit').removeAttr("disabled");
+        // $('#submit').removeAttr("disabled");
     })
 })

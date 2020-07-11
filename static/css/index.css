@@ -96,3 +96,10 @@ body{
     width: 200px;
     display: inline-block;
 }
+.respinfo{
+    max-width: 400px;
+    height: 100px;
+    overflow-y: auto;
+    word-wrap: break-word;
+    text-align: left;
+}
