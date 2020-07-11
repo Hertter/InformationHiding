@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 
 # 处理图像嵌入相关的类
-class Embed:
+class LSB:
     # jpg图像位置
     monarch_lsb_jpg = './embed/monarch_lsb.jpg'
     # png图像位置
