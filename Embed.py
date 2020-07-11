@@ -97,7 +97,7 @@ class Embed:
         print("PNG: ", msg_out2)
 
         self.save_img(img_gray, 'Grayscale Image', 'original.' + self.format)
-        self.save_img(img_gray, 'Embed Image', 'embed.' + self.format)
+        self.save_img(img_marked_jpg, 'Embed Image', 'embed.' + self.format)
 
         return msg_out1, msg_out2
 

@@ -2,12 +2,31 @@ from flask import Flask
 from flask import render_template
 from flask import request, jsonify, make_response
 from Embed import Embed
+from skimage.metrics import peak_signal_noise_ratio
+from skimage.metrics import structural_similarity
 
 import base64
 import os
 import flask
+import cv2
 
 app = Flask(__name__)
+
+
+# 获取图像的psnr和ssim
+def get_image_quality(format, image_path):
+    gray_image = cv2.imread('./embed/' + image_path, cv2.IMREAD_GRAYSCALE)
+    print('./embed/' + image_path)
+    print('./embed/' + os.path.splitext(image_path)[0] + '.' + format)
+    embed_image = cv2.imread('./embed/monarch_lsb.' + format, cv2.IMREAD_GRAYSCALE)
+
+    psnr = peak_signal_noise_ratio(gray_image, embed_image)
+    psnr = '{:.4f}'.format(psnr)
+    ssim = structural_similarity(gray_image, embed_image)
+    ssim = '{:.8f}'.format(ssim)
+    print('psnr: ', psnr)
+    print('ssim: ', ssim)
+    return psnr, ssim
 
 
 # 删除本地图像
@@ -77,6 +96,8 @@ def embed():
     msg_out1, msg_out2 = image_process.process(image_path)
     # 获取base64编码
     image_base64_1, image_base64_2 = return_base64(format)
+    # 获取图像质量
+    psnr, ssim = get_image_quality(format, image.filename)
     # json结果
     result = {}
     # 判断格式
@@ -84,13 +105,17 @@ def embed():
         result = {
             'msg_out': msg_out1,
             'image_base64_1': image_base64_1,
-            'image_base64_2': image_base64_2
+            'image_base64_2': image_base64_2,
+            'psnr': psnr,
+            'ssim': ssim
         }
     elif format == 'png':
         result = {
             'msg_out': msg_out2,
             'image_base64_1': image_base64_1,
-            'image_base64_2': image_base64_2
+            'image_base64_2': image_base64_2,
+            'psnr': psnr,
+            'ssim': ssim
         }
     # 处理跨域问题
     json_data = jsonify(result)
