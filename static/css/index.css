@@ -78,6 +78,7 @@ body{
 
 .table{
     display: none;
+    width: 50%;
 }
 
 .img-responsive{

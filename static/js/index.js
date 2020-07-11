@@ -2,8 +2,8 @@ $(function () {
     var imgBase64 = '';
     var change1 = document.getElementById('change1');
     var imgTag1 = document.getElementById('chooes_img1');
-    var Gimg = document.getElementById('Gimg');
     var Oimg = document.getElementById('Oimg');
+    var Gimg = document.getElementById('Gimg');
     var Eimg = document.getElementById('Eimg');
     // 当从本地选择页面后出发onchange事件
     change1.onchange = function (event) {
@@ -12,7 +12,7 @@ $(function () {
         url = URL.createObjectURL(file);
         $('.table').hide();
         imgTag1.src = url;
-        Gimg.src = url;
+        Oimg.src = url;
         var reader = new FileReader();
         var imgUrlBase64 = '';
         if (file) {
@@ -34,7 +34,7 @@ $(function () {
     })
 
     $("#submit").click(function () {
-        
+        $('#submit').attr('disabled',"true");
         //这里验证表单是否可以提交  如果返回false阻止提交
         if ($('#embedText').val().trim() == '') {
             $.Toast("嵌入的信息为空", "必须填入嵌入的信息", "error", {
@@ -66,9 +66,10 @@ $(function () {
         }
         $('#form1').ajaxForm(function(data){
             console.log(data);
+            $('.respinfo').text(data.msg_out)
             $("#myModal").modal("show");
             setTimeout(function(){
-                Oimg.src = data.image_base64_1;
+                Gimg.src = data.image_base64_1;
                 Eimg.src = data.image_base64_2;
             })
         })
@@ -81,8 +82,10 @@ $(function () {
 
     $('.close').click(function () {
         $('.table').hide();
+        $('#submit').removeAttr("disabled");
     })
     $('#closeModal').click(function () {
         $('.table').hide();
+        $('#submit').removeAttr("disabled");
     })
 })
