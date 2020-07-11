@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-# 处理图像嵌入相关的类
+# 使用lsb算法处理图像嵌入
 class LSB:
     # jpg图像位置
     monarch_lsb_jpg = './embed/monarch_lsb.jpg'
@@ -97,7 +97,10 @@ class LSB:
         print("PNG: ", msg_out2)
 
         self.save_img(img_gray, 'Grayscale Image', 'original.' + self.format)
-        self.save_img(img_marked_jpg, 'Embed Image', 'embed.' + self.format)
+        if self.format == 'jpg':
+            self.save_img(img_marked_jpg, 'Embed Image', 'embed.jpg')
+        elif self.format == 'png':
+            self.save_img(img_marked_png, 'Embed Image', 'embed.png')
 
         return msg_out1, msg_out2
 
