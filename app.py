@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from flask import Flask
 from flask import render_template
 from flask import request, jsonify, make_response
@@ -61,6 +63,9 @@ def return_base64(format):
 
 # 保存图片
 def save_image(image):
+    save_path = Path("./embed")
+    if not save_path.exists():
+        os.mkdir("embed")
     # 保存文件的目录
     file_path = r'./embed/'
     # 图片的名字
