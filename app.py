@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from flask import Flask
 from flask import render_template
 from flask import request, jsonify, make_response
@@ -61,6 +63,9 @@ def return_base64(format):
 
 # 保存图片
 def save_image(image):
+    save_path = Path("./embed")
+    if not save_path.exists():
+        os.mkdir("embed")
     # 保存文件的目录
     file_path = r'./embed/'
     # 图片的名字
@@ -74,8 +79,7 @@ def save_image(image):
         return file_paths
 
 
-@app.route('/lsb/embed', methods=['post'])
-def lsb():
+def main_function(api):
     print(flask.request.values)
     # 文字
     text = flask.request.values.get('text')
@@ -94,7 +98,11 @@ def lsb():
     # 保存图片
     image_path = save_image(image)
     # 图片处理
-    image_process = LSB(text, format, int(length))
+    image_process = None
+    if api == 'lsb':
+        image_process = LSB(text, format, int(length))
+    elif api == 'dct':
+        image_process = DCT(text, format, int(length))
     msg_out1, msg_out2 = image_process.process(image_path)
     # 获取base64编码
     image_base64_1, image_base64_2 = return_base64(format)
@@ -127,61 +135,16 @@ def lsb():
     delete_local_image('./embed')
     # 返回json数据
     return res
+
+
+@app.route('/lsb/embed', methods=['post'])
+def lsb():
+    return main_function('lsb')
 
 
 @app.route('/dct/embed', methods=['post'])
 def dct():
-    print(flask.request.values)
-    # 文字
-    text = flask.request.values.get('text')
-    # 图像
-    image = request.files['image']
-    # 长度
-    length = flask.request.values.get('length')
-    # 格式
-    format = flask.request.values.get('format')
-
-    print('text:', text)
-    print('image:', image)
-    print('length:', length)
-    print('format:', format)
-
-    # 保存图片
-    image_path = save_image(image)
-    # 图片处理
-    image_process = DCT(text, format, int(length))
-    msg_out1, msg_out2 = image_process.process(image_path)
-    # 获取base64编码
-    image_base64_1, image_base64_2 = return_base64(format)
-    # 获取图像质量
-    psnr, ssim = get_image_quality(format, image.filename)
-    # json结果
-    result = {}
-    # 判断格式
-    if format == 'jpg':
-        result = {
-            'msg_out': msg_out1,
-            'image_base64_1': image_base64_1,
-            'image_base64_2': image_base64_2,
-            'psnr': psnr,
-            'ssim': ssim
-        }
-    elif format == 'png':
-        result = {
-            'msg_out': msg_out2,
-            'image_base64_1': image_base64_1,
-            'image_base64_2': image_base64_2,
-            'psnr': psnr,
-            'ssim': ssim
-        }
-    # 处理跨域问题
-    json_data = jsonify(result)
-    res = make_response(json_data)
-    res.headers['Access-Control-Allow-Origin'] = '*'
-    # 删除本地图片
-    delete_local_image('./embed')
-    # 返回json数据
-    return res
+    return main_function('dct')
 
 
 @app.route('/')

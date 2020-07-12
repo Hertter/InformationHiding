@@ -133,7 +133,10 @@ class DCT:
 
     def process(self, img_file):
         img_gray = cv2.imread(img_file, cv2.IMREAD_GRAYSCALE)
-        img_marked, len_msg = self.dct_embed(img_gray, self.str, 20200417)
+        msg = ''
+        for _ in np.arange(self.count):
+            msg += self.str
+        img_marked, len_msg = self.dct_embed(img_gray, msg, 20200417)
 
         cv2.imwrite(self.monarch_lsb_jpg, img_marked, [int(cv2.IMWRITE_JPEG_QUALITY), 80])
         cv2.imwrite(self.monarch_lsb_png, img_marked, [int(cv2.IMWRITE_JPEG_QUALITY), 80])
@@ -143,7 +146,7 @@ class DCT:
         msg_out1 = self.dct_extract(img_stego_jpg, len_msg, 20200417)
         msg_out2 = self.dct_extract(img_stego_png, len_msg, 20200417)
 
-        print('嵌入的信息为：', self.str)
+        print('嵌入的信息为：', msg)
         print('提取的信息1为：', msg_out1)
         print('提取的信息2为：', msg_out2)
         print(img_marked.shape, type(img_marked), type(img_marked[0, 0]))
