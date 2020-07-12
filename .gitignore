@@ -2,3 +2,4 @@
  
 # .idea folder
 .idea/
+__pycache__/
