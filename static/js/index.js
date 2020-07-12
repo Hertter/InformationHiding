@@ -2,8 +2,8 @@ $(function () {
     var imgBase64 = '';
     var change1 = document.getElementById('change1');
     var imgTag1 = document.getElementById('chooes_img1');
-    var Oimg = document.getElementById('Oimg');
     var Gimg = document.getElementById('Gimg');
+    var Oimg = document.getElementById('Oimg');
     var Eimg = document.getElementById('Eimg');
     // 当从本地选择页面后出发onchange事件
     change1.onchange = function (event) {
@@ -12,7 +12,7 @@ $(function () {
         url = URL.createObjectURL(file);
         $('.table').hide();
         imgTag1.src = url;
-        Oimg.src = url;
+        Gimg.src = url;
         var reader = new FileReader();
         var imgUrlBase64 = '';
         if (file) {
@@ -32,16 +32,8 @@ $(function () {
         // $('.infotext').text('从图像中提取的信息为：' + 'ds');
         $('.table').show();
     })
+
     $("#submit").click(function () {
-        var toName = $("input[name='algorithm']:checked").val();
-        var toUrl = 'http://127.0.0.1:5000/'+ toName + '/embed';
-        $('#form1').attr('action', toUrl);
-        $('.warning').hide();
-        // $('#submit').attr('disabled',"true");
-        // setTimeout(function(){
-        //     $('#submit').removeAttr("disabled");
-        // },500)
-        //这里验证表单是否可以提交  如果返回false阻止提交
         if ($('#embedText').val().trim() == '') {
             $.Toast("嵌入的信息为空", "必须填入嵌入的信息", "error", {
                 stack: true,
@@ -70,32 +62,61 @@ $(function () {
             });
             return;
         }
-        console.log($('input[name="format"]:checked').val());
-        console.log($('input[name="algorithm"]:checked').val());
-        if($('input[name="format"]:checked').val() == 'jpg' && $('input[name="algorithm"]:checked').val() == 'lsb') $('.warning').show();
-        $('#form1').ajaxForm(function(data){
-            console.log(data);
-            $('.respinfo').text(data.msg_out)
-            $("#myModal").modal("show");
-            setTimeout(function(){
-                Gimg.src = data.image_base64_1;
-                Eimg.src = data.image_base64_2;
-                $('.psnr').text(data.psnr);
-                $('.ssim').text(data.ssim);
-            })
-        })
+        var toName = $("input[name='algorithm']:checked").val();
 
+        console.log($("#form1").serialize());
+        // $('original').text($("#form1").serialize());
         // 发送请求获取嵌入后的图像和嵌入后读取的信息
+        console.log($('#embedText').val(), $('.copies').val(), $('[name=format]').val());
+        // $.post("", {
+        //
+        //     },
+        //     function (result) {
+        //    console.log(result);
+        // });
 
+        $.ajax({
+            type: "POST",
+            url: 'http://127.0.0.1:5000/lsb/embed',
+            data: JSON.stringify({
+                text: $('#embedText').val(),
+                length: Number($('.copies').val()),
+                format: $('[name=format]').val(),
+                image: imgBase64
+            }),
+            contentType: "multipart/form-data",
+            processData: false,
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        });
+
+
+        // 请求接口
+        // var toUrl = '';
+        // switch(toName){
+        //     case 'lsb':
+
+        //         toUrl = 'lsb';
+        //         break;
+        //     case 'dtc':
+        //         toUrl = 'dtc';
+        //         break;
+        //     case 'dwt':
+        //         toUrl = 'dwt';
+        //         break;
+        // }
+        $("#myModal").modal("show")
     })
 
 
     $('.close').click(function () {
         $('.table').hide();
-        // $('#submit').removeAttr("disabled");
     })
     $('#closeModal').click(function () {
         $('.table').hide();
-        // $('#submit').removeAttr("disabled");
     })
 })
