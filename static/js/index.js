@@ -74,8 +74,9 @@ $(function () {
         console.log($('input[name="algorithm"]:checked').val());
         if($('input[name="format"]:checked').val() == 'jpg' && $('input[name="algorithm"]:checked').val() == 'lsb') $('.warning').show();
         $('#form1').ajaxForm(function(data){
-            console.log(data);
-            $('.respinfo').text(data.msg_out)
+            $('.format-title').text('输出格式为：.' + $('input[name="format"]:checked').val().toUpperCase( ));
+            $('.algorithm-title').text('选择的算法类型：' + $('input[name="algorithm"]:checked').val().toUpperCase( ));
+            $('.respinfo').text(data.msg_out);
             $("#myModal").modal("show");
             setTimeout(function(){
                 Gimg.src = data.image_base64_1;
