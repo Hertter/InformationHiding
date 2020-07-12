@@ -5,6 +5,7 @@ from flask import render_template
 from flask import request, jsonify, make_response
 
 from DCT import DCT
+from DWT import DWT
 from LSB import LSB
 from skimage.metrics import peak_signal_noise_ratio
 from skimage.metrics import structural_similarity
@@ -42,34 +43,47 @@ def delete_local_image(filepath):
             os.remove(file_path)
 
 
+# 读取文件同时获取base64编码
+def open_file_and_get_base64(path):
+    with open(path, 'rb') as file:
+        # 图像的base64编码
+        base64_data = base64.b64encode(file.read())
+        # 获取编码
+        data = head + base64_data.decode()
+    return data
+
+
 # 返回base64编码
 def return_base64(format):
+    global head, base64_data1, base64_data2, base64_data3, base64_data4
     if format == "jpg":
         head = 'data:image/jpeg;base64,'
     elif format == "png":
         head = 'data:image/png;base64,'
-    with open('./embed/original.' + format, 'rb') as file:
-        # 图像的base64编码
-        base64_data = base64.b64encode(file.read())
-        # 获取编码
-        base64_data1 = head + base64_data.decode()
-    with open('./embed/embed.' + format, 'rb') as file:
-        # 图像的base64编码
-        base64_data = base64.b64encode(file.read())
-        # 获取编码
-        base64_data2 = head + base64_data.decode()
-    return base64_data1, base64_data2
+
+    base64_data1 = ''
+    base64_data2 = ''
+    base64_data3 = ''
+    base64_data4 = ''
+
+    if Path('./embed/original.' + format).exists():
+        base64_data1 = open_file_and_get_base64('./embed/original.' + format)
+    if Path('./embed/embed.' + format).exists():
+        base64_data2 = open_file_and_get_base64('./embed/embed.' + format)
+    if Path('./embed/watermark_extracted.' + format).exists():
+        base64_data3 = open_file_and_get_base64('./embed/watermark.' + format)
+    if Path('./embed/watermark.' + format).exists():
+        base64_data4 = open_file_and_get_base64('./embed/watermark_extracted.' + format)
+    return base64_data1, base64_data2, base64_data3, base64_data4
 
 
 # 保存图片
-def save_image(image):
+def save_image(image, file_name):
     save_path = Path("./embed")
     if not save_path.exists():
         os.mkdir("embed")
     # 保存文件的目录
     file_path = r'./embed/'
-    # 图片的名字
-    file_name = image.filename
     if image:
         # 地址拼接
         file_paths = os.path.join(file_path, file_name)
@@ -80,50 +94,73 @@ def save_image(image):
 
 
 def main_function(api):
+    global msg_out1, msg_out2, watermark, length, text
     print(flask.request.values)
-    # 文字
-    text = flask.request.values.get('text')
+    print(request.files)
+    if api == 'lsb' or api == 'dct':
+        # 文字
+        text = flask.request.values.get('text')
+        # 长度
+        length = flask.request.values.get('length')
+        print('text:', text)
+        print('length:', length)
+    elif api == 'dwt':
+        # 水印图
+        watermark = request.files['watermark']
+        print('watermark:', watermark)
     # 图像
     image = request.files['image']
-    # 长度
-    length = flask.request.values.get('length')
     # 格式
     format = flask.request.values.get('format')
 
-    print('text:', text)
     print('image:', image)
-    print('length:', length)
     print('format:', format)
 
     # 保存图片
-    image_path = save_image(image)
+    image_path = save_image(image, image.filename)
     # 图片处理
     image_process = None
     if api == 'lsb':
         image_process = LSB(text, format, int(length))
+        msg_out1, msg_out2 = image_process.process(image_path)
     elif api == 'dct':
         image_process = DCT(text, format, int(length))
-    msg_out1, msg_out2 = image_process.process(image_path)
+        msg_out1, msg_out2 = image_process.process(image_path)
+    elif api == 'dwt':
+        # 保存水印图片
+        watermark_path = save_image(watermark, 'monarch_lsb.' + os.path.splitext(watermark.filename)[1])
+        image_process = DWT(watermark_path, format)
+        image_process.process(image_path, watermark_path)
     # 获取base64编码
-    image_base64_1, image_base64_2 = return_base64(format)
+    image_base64_1, image_base64_2, image_base64_3, image_base64_4 = return_base64(format)
     # 获取图像质量
     psnr, ssim = get_image_quality(format, image.filename)
     # json结果
     result = {}
     # 判断格式
-    if format == 'jpg':
+    if api == 'lsb' or api == 'dct':
+        if format == 'jpg':
+            result = {
+                'msg_out': msg_out1,
+                'image_base64_1': image_base64_1,
+                'image_base64_2': image_base64_2,
+                'psnr': psnr,
+                'ssim': ssim
+            }
+        elif format == 'png':
+            result = {
+                'msg_out': msg_out2,
+                'image_base64_1': image_base64_1,
+                'image_base64_2': image_base64_2,
+                'psnr': psnr,
+                'ssim': ssim
+            }
+    elif api == 'dwt':
         result = {
-            'msg_out': msg_out1,
             'image_base64_1': image_base64_1,
             'image_base64_2': image_base64_2,
-            'psnr': psnr,
-            'ssim': ssim
-        }
-    elif format == 'png':
-        result = {
-            'msg_out': msg_out2,
-            'image_base64_1': image_base64_1,
-            'image_base64_2': image_base64_2,
+            'image_base64_3': image_base64_3,
+            'image_base64_4': image_base64_4,
             'psnr': psnr,
             'ssim': ssim
         }
@@ -145,6 +182,11 @@ def lsb():
 @app.route('/dct/embed', methods=['post'])
 def dct():
     return main_function('dct')
+
+
+@app.route('/dwt/embed', methods=['post'])
+def dwt():
+    return main_function('dwt')
 
 
 @app.route('/')
