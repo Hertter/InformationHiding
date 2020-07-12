@@ -194,5 +194,10 @@ def hello_world():
     return render_template('index.html')
 
 
+@app.route('/dwt.html')
+def dwt_html():
+    return render_template('dwt.html')
+
+
 if __name__ == '__main__':
     app.run()
