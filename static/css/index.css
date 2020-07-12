@@ -78,6 +78,7 @@ body{
 
 .table{
     display: none;
+    width: 50%;
 }
 
 .img-responsive{
@@ -94,4 +95,16 @@ body{
 .copies{
     width: 200px;
     display: inline-block;
+}
+.respinfo{
+    max-width: 400px;
+    height: 100px;
+    overflow-y: auto;
+    word-wrap: break-word;
+    text-align: left;
+}
+
+.warning{
+    font-size: 10px;
+    color: red;
 }
