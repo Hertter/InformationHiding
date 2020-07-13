@@ -32,7 +32,7 @@ class LSB:
 
     @staticmethod
     def str_2_bit_seq(s, width=8):
-        bin_str = ''.join([(bin(c).replace('0b', '')).zfill(width) for c in s.encode(encoding="gb18030")])
+        bin_str = ''.join([(bin(c).replace('0b', '')).zfill(width) for c in s.encode(encoding="utf-8")])
         bit_seq = [np.uint8(c) for c in bin_str]
 
         return bit_seq
